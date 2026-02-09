@@ -1,0 +1,8 @@
+curl -X POST https://tapestry-serve-production.up.railway.app/weave \
+-H "Content-Type: application/json" \
+-d '{
+  "message": "Aragorn is a Ranger who lives in Rivendell. Rivendell is a hidden valley.",
+  "history": [],
+  "nodes": [],
+  "edges": []
+}'
