@@ -39,19 +39,19 @@ export interface TapestryEdge {
 export const NodeExtractionSchema = z.object({
   label: z.string().describe("The name of the entity"),
   type: z.enum(['Person', 'Place', 'Thing', 'Event']),
-  description: z.string().optional(),
-  // We explicitly define the keys we care about for our "Perspectives"
-  // and add a generic "metadata" string for anything else.
+  description: z.string().nullable().describe("A brief summary of the entity"),
   attributes: z.object({
+    // In OpenAI Strict Mode, every field defined must be in the 'required' array.
+    // We use .nullable() so the AI can return null if the info is missing.
     coordinates: z.object({
       x: z.number(),
       y: z.number()
-    }).optional().describe("Coordinates if the entity is a location"),
-    timestamp: z.string().optional().describe("Date or time if the entity is an event"),
-    locationType: z.string().optional().describe("e.g., 'city', 'mountain'"),
-    extraInfo: z.string().optional().describe("Any other notable details as a string")
-  }).optional()
-}).strict(); // Adding .strict() helps ensure the schema is clean for OpenAI
+    }).nullable().describe("Coordinates if the entity is a location"),
+    timestamp: z.string().nullable().describe("Date or time if the entity is an event"),
+    locationType: z.string().nullable().describe("e.g., 'city', 'mountain'"),
+    extraInfo: z.string().nullable().describe("Any other notable details")
+  })
+}).strict();
 
 export const EdgeExtractionSchema = z.object({
   sourceLabel: z.string().describe("The name of the starting node"),

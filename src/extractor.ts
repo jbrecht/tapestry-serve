@@ -25,19 +25,27 @@ export async function extractionNode(state: typeof TapestryState.State) {
   const updatedEdges = [...state.edges];
 
   // 1. Process New Nodes (or update existing)
-  result.extractedNodes.forEach(newNode => {
-    const existing = updatedNodes.find(n => n.label.toLowerCase() === newNode.label.toLowerCase());
-    if (existing) {
-      existing.attributes = { ...existing.attributes, ...newNode.attributes };
-      if (newNode.description) existing.description = newNode.description;
-    } else {
-      updatedNodes.push({
-        id: uuidv4(),
-        ...newNode,
-        attributes: newNode.attributes || {}
-      } as TapestryNode);
-    }
-  });
+// Inside your extractionNode function where you process new nodes:
+result.extractedNodes.forEach(newNode => {
+  // Clean up nulls before saving to state
+  const cleanedAttributes = Object.fromEntries(
+    Object.entries(newNode.attributes || {}).filter(([_, v]) => v !== null)
+  );
+
+  const existing = updatedNodes.find(n => n.label.toLowerCase() === newNode.label.toLowerCase());
+  if (existing) {
+    existing.attributes = { ...existing.attributes, ...cleanedAttributes };
+    if (newNode.description) existing.description = newNode.description;
+  } else {
+    updatedNodes.push({
+      id: uuidv4(),
+      label: newNode.label,
+      type: newNode.type,
+      description: newNode.description || '',
+      attributes: cleanedAttributes
+    });
+  }
+});
 
   // 2. Process New Edges
   result.extractedEdges.forEach(newEdge => {
