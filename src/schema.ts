@@ -56,11 +56,12 @@ export const NodeExtractionSchema = z.object({
 export const EdgeExtractionSchema = z.object({
   sourceLabel: z.string().describe("The name of the starting node"),
   targetLabel: z.string().describe("The name of the ending node"),
-  predicate: z.string().describe("The relationship verb, e.g., 'SPOUSE_OF'"),
+  predicate: z.string().describe("The relationship verb, e.g., 'SPOUSE_OF'. Do NOT use 'NOT_' prefix."),
 });
 
 export const TapestryExtractionSchema = z.object({
   extractedNodes: z.array(NodeExtractionSchema),
   extractedEdges: z.array(EdgeExtractionSchema),
+  edgesToRemove: z.array(EdgeExtractionSchema).describe("Edges that should be deleted based on the user's request (e.g., 'X is not Y')"),
   suggestedFollowUp: z.string().describe("A question to ask the user to gather more information about the graph from them."),
 });

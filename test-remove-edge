@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# 1. Create a graph with an edge
+echo "Creating graph..."
+RESPONSE=$(curl -s -X POST http://localhost:3000/weave \
+-H "Content-Type: application/json" \
+-d '{
+  "message": "Bob is a friend of Mary.",
+  "history": [],
+  "nodes": [],
+  "edges": []
+}')
+
+NODES=$(echo $RESPONSE | jq '.nodes')
+EDGES=$(echo $RESPONSE | jq '.edges')
+
+echo "Graph created with nodes: $(echo $NODES | jq 'length') and edges: $(echo $EDGES | jq 'length')"
+
+# 2. Remove the edge
+echo "Removing edge..."
+REMOVE_RESPONSE=$(curl -s -X POST http://localhost:3000/weave \
+-H "Content-Type: application/json" \
+-d "{
+  \"message\": \"Bob is not a friend of Mary.\",
+  \"history\": [],
+  \"nodes\": $NODES,
+  \"edges\": $EDGES
+}")
+
+UPDATED_EDGES=$(echo $REMOVE_RESPONSE | jq '.edges')
+echo "Updated edges count: $(echo $UPDATED_EDGES | jq 'length')"
+
+if [ "$(echo $UPDATED_EDGES | jq 'length')" -eq "0" ]; then
+  echo "SUCCESS: Edge removed."
+else
+  echo "FAILURE: Edge not removed."
+  echo "Edges: $UPDATED_EDGES"
+fi
