@@ -62,5 +62,5 @@ export const EdgeExtractionSchema = z.object({
 export const TapestryExtractionSchema = z.object({
   extractedNodes: z.array(NodeExtractionSchema),
   extractedEdges: z.array(EdgeExtractionSchema),
-  suggestedFollowUp: z.string().describe("A question to ask the user to grow the graph"),
+  suggestedFollowUp: z.string().describe("A question to ask the user to gather more information about the graph from them."),
 });

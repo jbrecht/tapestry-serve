@@ -14,7 +14,8 @@ export async function extractionNode(state: typeof TapestryState.State) {
     Rules:
     1. Entity Resolution: If an entity exists (check 'label'), do NOT create a new node.
     2. Attributes: Add new info to 'attributes' (like 'timestamp' for Events).
-    3. Links: Create edges between nodes using labels.`;
+    3. Links: Create edges between nodes using labels.
+    4. Follow-up: Ask the user a question to gather more information about the graph. Focus on missing connections or details. Do not ask if they want to know more.`;
 
   const result = await structuredModel.invoke([
     new SystemMessage(systemPrompt),
