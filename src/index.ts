@@ -22,6 +22,10 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/projects", projectRoutes);
 
+app.get("/server-test", (req, res) => {
+  res.send("Server available");
+});
+
 // 2. Compile the Tapestry Graph
 const workflow = new StateGraph(TapestryState)
   .addNode("extractor", extractionNode)
